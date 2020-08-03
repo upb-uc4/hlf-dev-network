@@ -3,18 +3,7 @@
 
 #clone chaincode
 
-if [ ! -d ./hyperledger_chaincode/ ]
-then
-	git clone https://github.com/upb-uc4/hyperledger_chaincode.git
-else
-	read -p "Override existing chaincode? " -n 1 -r
-	if [[ $REPLY =~ ^[Yy]$ ]]
-	then
-		rm -rf hyperledger_chaincode
-		git clone https://github.com/upb-uc4/hyperledger_chaincode.git
-	fi
-fi
-
+./fetch_chaincode.sh
 
 #docker
 
