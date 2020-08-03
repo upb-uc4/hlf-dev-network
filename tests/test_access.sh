@@ -3,5 +3,5 @@
 #apply query at docker peer
 RESULT=$(docker exec cli peer chaincode list --installed)
 echo "$RESULT"
-if [[ $RESULT =~ "Name: myc2" ]]; then exit 0; fi
+if [[ $RESULT =~ "Name: mycc" ]]; then exit 0; fi
 exit 1
