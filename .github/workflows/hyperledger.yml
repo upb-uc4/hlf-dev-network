@@ -53,7 +53,7 @@ jobs:
         echo "##########################"
         docker exec -it cli bash
 		RESULT=peer chaincode query -n mycc -c '{"Args":["getAllCourses"]}' -C myc
-		if [ "$RESULT" = "[]" ]; then
+		if [ "$RESULT" = "\[\]" ]; then
             exit 1
         else
             exit 0
