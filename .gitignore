@@ -1,1 +1,4 @@
 /chaincode/
+.vs
+.idea
+.gradle
