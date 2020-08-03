@@ -32,16 +32,16 @@ jobs:
     - name: Set up dev_network - dockers
       run: |
         echo "##########################"
-        echo "#             start network script             #"
+        echo "#  start network script  #"
         echo "##########################"
         ./network.sh -d
         echo "##########################"
-        echo "#            started network script           #"
+        echo "# started network script #"
         echo "##########################"
-        echo "#                  begin sleep                    #"
+        echo "#    begin sleep         #"
         echo "##########################"
         sleep 180
-        echo "#                  finish sleep                    #"
+        echo "#    finish sleep        #"
         echo "##########################"
         popd
     
@@ -52,7 +52,9 @@ jobs:
         echo "#    starting test       #"
         echo "##########################"
         docker exec -it cli bash
-		RESULT=peer chaincode query -n mycc -c '{"Args":["getAllCourses"]}' -C myc
+		peer chaincode query -n mycc -c '{"Args":["getAllCourses"]}' -C myc > result.txt
+        RESULT=cat result.txt
+        echo "$RESULT"
 		if [ "$RESULT" = "\[\]" ]; then exit 1; fi
         echo "##########################"
         echo "#    finished test       #"
