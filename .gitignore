@@ -1,4 +1,6 @@
+/hyperledger_chaincode/
 /chaincode/
+myc.block
 .vs
 .idea
 .gradle
