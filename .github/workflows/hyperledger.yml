@@ -34,7 +34,7 @@ jobs:
         echo "##########################"
         echo "#  start network script  #"
         echo "##########################"
-        ./network.sh -d
+        ./network.sh &
         echo "##########################"
         echo "# started network script #"
         echo "##########################"
