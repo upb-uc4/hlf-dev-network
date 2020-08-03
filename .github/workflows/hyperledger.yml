@@ -43,19 +43,16 @@ jobs:
         sleep 180
         echo "#    finish sleep        #"
         echo "##########################"
-        popd
     
     # run single_query_test
     - name: Run tests
       run: |
+        pushd ./tests
         echo "##########################"
         echo "#    starting test       #"
         echo "##########################"
-        docker exec -it cli bash
-		peer chaincode query -n mycc -c '{"Args":["getAllCourses"]}' -C myc > result.txt
-        RESULT=cat result.txt
-        echo "$RESULT"
-		if [ "$RESULT" = "\[\]" ]; then exit 1; fi
+        ./test_access.sh
         echo "##########################"
         echo "#    finished test       #"
         echo "##########################"
+        popd
