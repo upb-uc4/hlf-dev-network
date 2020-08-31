@@ -1,9 +1,22 @@
 #!/bin/bash
 
+# BRANCH_TAG default branch = develop
+export BRANCH_TAG=develop
+
+# BRANCH_TAG read branch tag
+if [ -z "$1" ]
+then
+  echo "Installing latest chaincode from develop."
+  echo "Use './installChaincode.sh [branch|tag]' to specify another branch or tag."
+else
+  echo "Using branch / tag: $1"
+  export BRANCH_TAG=$1
+fi
+echo ""
 
 #clone chaincode
 
-./fetch_chaincode.sh
+./fetch_chaincode.sh $BRANCH_TAG
 
 #docker
 
