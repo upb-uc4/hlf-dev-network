@@ -1,5 +1,6 @@
 /hyperledger_chaincode/
 /chaincode/
+/hlf-chaincode/
 myc.block
 .vs
 .idea
