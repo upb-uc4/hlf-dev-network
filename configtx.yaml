@@ -34,7 +34,7 @@ Organizations:
 # TODO: try "ID: DEFAULT"
 
         # MSPDir is the filesystem path which contains the MSP configuration.
-        MSPDir: C:\Git\upb-uc4\hlf-dev-network\msp
+        MSPDir: ~/Documents/git/hlf-dev-network/msp
 
         # Policies defines the set of policies at this level of the config tree
         # For organization policies, their canonical path is usually
