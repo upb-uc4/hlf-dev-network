@@ -30,11 +30,10 @@ Organizations:
 
         # ID is the key by which this org's MSP definition will be referenced.
         # ID can include alphanumeric characters as well as dots and dashes.
-        ID: SampleOrg
-# TODO: try "ID: DEFAULT"
+        ID: DEFAULT
 
         # MSPDir is the filesystem path which contains the MSP configuration.
-        MSPDir: ~/Documents/git/hlf-dev-network/msp
+        MSPDir: msp
 
         # Policies defines the set of policies at this level of the config tree
         # For organization policies, their canonical path is usually
@@ -54,23 +53,17 @@ Organizations:
                 # Rule: "OR('SampleOrg.admin', 'SampleOrg.client')"
             Admins:
                 Type: Signature
-                Rule: "OR('SampleOrg.admin')"
+                Rule: "OR('SampleOrg.member')"
             Endorsement:
                 Type: Signature
                 Rule: "OR('SampleOrg.member')"
 
-        # OrdererEndpoints is a list of all orderers this org runs which clients
-        # and peers may to connect to to push transactions and receive blocks respectively.
-        OrdererEndpoints:
-            - "orderer:7050"
-
-# TODO: try with AnchorPeers
         # AnchorPeers defines the location of peers which can be used for
         # cross-org gossip communication. Note, this value is only encoded in
         # the genesis block in the Application section context.
-        #AnchorPeers:
-        #    - Host: peer1-org1
-        #      Port: 7051
+        AnchorPeers:
+            - Host: peer
+              Port: 7051
 
 ################################################################################
 #
@@ -143,7 +136,7 @@ Application: &ApplicationDefaults
         #
         # Users can override these defaults with their own policy mapping by defining the
         # mapping under ACLs in their channel definition
-
+        
         #---New Lifecycle System Chaincode (_lifecycle) function to policy mapping for access control--#
 
         # ACL policy for _lifecycle's "CheckCommitReadiness" function
@@ -153,10 +146,10 @@ Application: &ApplicationDefaults
         _lifecycle/CommitChaincodeDefinition: /Channel/Application/Writers
 
         # ACL policy for _lifecycle's "QueryChaincodeDefinition" function
-        _lifecycle/QueryChaincodeDefinition: /Channel/Application/Readers
+        _lifecycle/QueryChaincodeDefinition: /Channel/Application/Writers
 
         # ACL policy for _lifecycle's "QueryChaincodeDefinitions" function
-        _lifecycle/QueryChaincodeDefinitions: /Channel/Application/Readers
+        _lifecycle/QueryChaincodeDefinitions: /Channel/Application/Writers
 
         #---Lifecycle System Chaincode (lscc) function to policy mapping for access control---#
 
@@ -219,6 +212,7 @@ Application: &ApplicationDefaults
     # Organizations lists the orgs participating on the application side of the
     # network.
     Organizations:
+#      - *SampleOrg
 
     # Policies defines the set of policies at this level of the config tree
     # For Application policies, their canonical path is
@@ -235,10 +229,10 @@ Application: &ApplicationDefaults
             Rule: "ANY Readers"
         Writers:
             Type: ImplicitMeta
-            Rule: "ANY Writers"
+            Rule: "ANY Readers"
         Admins:
             Type: ImplicitMeta
-            Rule: "MAJORITY Admins"
+            Rule: "ANY Readers"
 
     # Capabilities describes the application level capabilities, see the
     # dedicated Capabilities section elsewhere in this file for a full
@@ -266,7 +260,7 @@ Orderer: &OrdererDefaults
     # as TLS validation.  The preferred way to specify orderer addresses is now
     # to include the OrdererEndpoints item in your org definition
     Addresses:
-        # - 127.0.0.1:7050
+        - "orderer:7050"
 
     # Batch Timeout: The amount of time to wait before creating a batch.
     BatchTimeout: 2s
@@ -324,15 +318,15 @@ Orderer: &OrdererDefaults
             Rule: "ANY Readers"
         Writers:
             Type: ImplicitMeta
-            Rule: "ANY Writers"
+            Rule: "ANY Readers"
         Admins:
             Type: ImplicitMeta
-            Rule: "MAJORITY Admins"
+            Rule: "ANY Readers"
         # BlockValidation specifies what signatures must be included in the block
         # from the orderer for the peer to validate it.
         BlockValidation:
             Type: ImplicitMeta
-            Rule: "ANY Writers"
+            Rule: "ANY Readers"
 
     # Capabilities describes the orderer level capabilities, see the
     # dedicated Capabilities section elsewhere in this file for a full
@@ -360,11 +354,11 @@ Channel: &ChannelDefaults
         # Who may invoke the 'Broadcast' API
         Writers:
             Type: ImplicitMeta
-            Rule: "ANY Writers"
+            Rule: "ANY Readers"
         # By default, who may modify elements at this config level
         Admins:
             Type: ImplicitMeta
-            Rule: "MAJORITY Admins"
+            Rule: "ANY Readers"
 
 
     # Capabilities describes the channel level capabilities, see the
@@ -386,6 +380,40 @@ Channel: &ChannelDefaults
 #
 ################################################################################
 Profiles:
+    # SampleDevModeSolo defines a configuration which uses the Solo orderer,
+    # contains the sample MSP as both orderer and consortium member, and
+    # requires only basic membership for admin privileges. It also defines
+    # an Application on the ordering system channel, which should usually
+    # be avoided.
+    OrgsOrdererGenesis:
+        <<: *ChannelDefaults
+        Orderer:
+            <<: *OrdererDefaults
+            Organizations:
+                - <<: *SampleOrg
+                  Policies:
+                      <<: *SampleOrgPolicies
+                      Admins:
+                          Type: Signature
+                          Rule: "OR('SampleOrg.member')"
+        Application:
+            <<: *ApplicationDefaults
+            Organizations:
+                - <<: *SampleOrg
+                  Policies:
+                      <<: *SampleOrgPolicies
+                      Admins:
+                          Type: Signature
+                          Rule: "OR('SampleOrg.member')"
+        Consortiums:
+            SampleConsortium:
+                Organizations:
+                    - <<: *SampleOrg
+                      Policies:
+                          <<: *SampleOrgPolicies
+                          Admins:
+                              Type: Signature
+                              Rule: "OR('SampleOrg.member')"
     OrgsChannel:
         <<: *ChannelDefaults
         Consortium: SampleConsortium
