@@ -9,7 +9,9 @@ echo "#                                   SETTING UP CHANNEL                    
 echo "############################################################################################"
 
 set -e
+# create channel from .tx - file
 peer channel create -c myc -f myc.tx -o orderer:7050
+# join channel
 peer channel join -b myc.block
 
 echo "############################################################################################"
@@ -40,7 +42,7 @@ echo "#                                   INITIALIZING CHAINCODE                
 echo "############################################################################################"
 
 # TODO: change the function to call the actual init-function
-peer chaincode instantiate -n ${CHAINCODE_NAME} -v 0 -c '{"Args":["initLedger"]}' -C myc
+peer chaincode instantiate -n ${CHAINCODE_NAME} -v 0 -c '{"Args":["initLedger"]}' -C myc -P "OR('Org1MSP.member','Org2MSP.member','SampleOrg.member')" --collections-config '/opt/gopath/src/chaincodedev/chaincode/collections_config.json'
 
 echo "############################################################################################"
 echo "#                                   CHAINCODE INITIALIZED                                  #"
