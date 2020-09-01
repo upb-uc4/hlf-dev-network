@@ -1,23 +1,22 @@
 #!/bin/bash
 
-
-# BRANCH_TAG default branch = develop
-export BRANCH_TAG=develop
-
-# BRANCH_TAG read branch tag
+# read parameter
 if [ -z "$1" ]
 then
+  # BRANCH_TAG default branch = develop
   echo "Installing latest chaincode from develop."
   echo "Use './installChaincode.sh [branch|tag]' to specify another branch or tag."
+  export BRANCH_TAG=develop
 else
-  echo "Using branch / tag: $1"
+  # BRANCH_TAG read from parameter
   export BRANCH_TAG=$1
 fi
-echo ""
+echo "######################################################"
+echo "#   Clone chaincode with branch / tag: $BRANCH_TAG   #"
+echo "######################################################"
 
 
-#clone chaincode
-
+# clone chaincode
 if [ ! -d ./hlf-chaincode/ ]
 then
 	git clone https://github.com/upb-uc4/hlf-chaincode.git
@@ -26,7 +25,7 @@ then
 	git pull
 	popd
 else
-	read -p "Update existing chaincode? " -n 1 -r
+	read -p "Overwrite existing chaincode (y/n)? " -n 1 -r
 	if [[ $REPLY =~ ^[Yy]$ ]]
 	then
 		pushd ./hlf-chaincode
@@ -37,5 +36,5 @@ else
 fi
 
 echo "#############################################"
-echo "#          chaincode up to date             #"
+echo "#             chaincode ready               #"
 echo "#############################################"
