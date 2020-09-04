@@ -2,6 +2,8 @@
 /chaincode/
 /hlf-chaincode/
 myc.block
+myc.tx
+orderer.block
 .vs
 .idea
 .gradle

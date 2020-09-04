@@ -64,6 +64,94 @@ Organizations:
         AnchorPeers:
             - Host: peer
               Port: 7051
+              
+    - &Org1
+        # Name is the key by which this org will be referenced in channel
+        # configuration transactions.
+        # Name can include alphanumeric characters as well as dots and dashes.
+        Name: Org1
+
+        # SkipAsForeign can be set to true for org definitions which are to be
+        # inherited from the orderer system channel during channel creation. This
+        # is especially useful when an admin of a single org without access to the
+        # MSP directories of the other orgs wishes to create a channel. Note
+        # this property must always be set to false for orgs included in block
+        # creation.
+        SkipAsForeign: false
+
+        # ID is the key by which this org's MSP definition will be referenced.
+        # ID can include alphanumeric characters as well as dots and dashes.
+        ID: org1MSP
+
+        # MSPDir is the filesystem path which contains the MSP configuration.
+        MSPDir: ../../msp
+
+        # Policies defines the set of policies at this level of the config tree
+        # For organization policies, their canonical path is usually
+        #   /Channel/<Application|Orderer>/<OrgName>/<PolicyName>
+        Policies: &SampleOrgPolicies
+            Readers:
+                Type: Signature
+                Rule: "OR('SampleOrgMSP.admin', 'SampleOrgMSP.member', 'SampleOrgMSP.peer', 'SampleOrgMSP.client')"
+                # If your MSP is configured with the new NodeOUs, you might
+                # want to use a more specific rule like the following:
+                # Rule: "OR('SampleOrg.admin', 'SampleOrg.peer', 'SampleOrg.client')"
+            Writers:
+                Type: Signature
+                Rule: "OR('SampleOrgMSP.admin', 'SampleOrgMSP.member', 'SampleOrgMSP.peer', 'SampleOrgMSP.client')"
+                # If your MSP is configured with the new NodeOUs, you might
+                # want to use a more specific rule like the following:
+                # Rule: "OR('SampleOrg.admin', 'SampleOrg.client')"
+            Admins:
+                Type: Signature
+                Rule: "OR('SampleOrgMSP.admin', 'SampleOrgMSP.member', 'SampleOrgMSP.peer', 'SampleOrgMSP.client')"
+            Endorsement:
+                Type: Signature
+                Rule: "OR('SampleOrgMSP.admin', 'SampleOrgMSP.member', 'SampleOrgMSP.peer', 'SampleOrgMSP.client')"
+                
+    - &Org2
+        # Name is the key by which this org will be referenced in channel
+        # configuration transactions.
+        # Name can include alphanumeric characters as well as dots and dashes.
+        Name: Org2
+
+        # SkipAsForeign can be set to true for org definitions which are to be
+        # inherited from the orderer system channel during channel creation. This
+        # is especially useful when an admin of a single org without access to the
+        # MSP directories of the other orgs wishes to create a channel. Note
+        # this property must always be set to false for orgs included in block
+        # creation.
+        SkipAsForeign: false
+
+        # ID is the key by which this org's MSP definition will be referenced.
+        # ID can include alphanumeric characters as well as dots and dashes.
+        ID: org2MSP
+
+        # MSPDir is the filesystem path which contains the MSP configuration.
+        MSPDir: ../../msp
+
+        # Policies defines the set of policies at this level of the config tree
+        # For organization policies, their canonical path is usually
+        #   /Channel/<Application|Orderer>/<OrgName>/<PolicyName>
+        Policies: &SampleOrgPolicies
+            Readers:
+                Type: Signature
+                Rule: "OR('SampleOrgMSP.admin', 'SampleOrgMSP.member', 'SampleOrgMSP.peer', 'SampleOrgMSP.client')"
+                # If your MSP is configured with the new NodeOUs, you might
+                # want to use a more specific rule like the following:
+                # Rule: "OR('SampleOrg.admin', 'SampleOrg.peer', 'SampleOrg.client')"
+            Writers:
+                Type: Signature
+                Rule: "OR('SampleOrgMSP.admin', 'SampleOrgMSP.member', 'SampleOrgMSP.peer', 'SampleOrgMSP.client')"
+                # If your MSP is configured with the new NodeOUs, you might
+                # want to use a more specific rule like the following:
+                # Rule: "OR('SampleOrg.admin', 'SampleOrg.client')"
+            Admins:
+                Type: Signature
+                Rule: "OR('SampleOrgMSP.admin', 'SampleOrgMSP.member', 'SampleOrgMSP.peer', 'SampleOrgMSP.client')"
+            Endorsement:
+                Type: Signature
+                Rule: "OR('SampleOrgMSP.admin', 'SampleOrgMSP.member', 'SampleOrgMSP.peer', 'SampleOrgMSP.client')"
 
 ################################################################################
 #
@@ -405,6 +493,12 @@ Profiles:
                     - <<: *SampleOrg
                       Policies:
                           <<: *SampleOrgPolicies
+                    - <<: *Org1
+                      Policies:
+                          <<: *SampleOrgPolicies
+                    - <<: *Org2
+                      Policies:
+                          <<: *SampleOrgPolicies
     SampleSingleMSPChannel:
         <<: *ChannelDefaults
         Consortium: SampleConsortium
@@ -412,3 +506,5 @@ Profiles:
             <<: *ApplicationDefaults
             Organizations:
                 - <<: *SampleOrg
+                - <<: *Org1
+                - <<: *Org2
