@@ -19,6 +19,15 @@ echo "######################################################"
 ./installChaincode.sh $BRANCH_TAG
 
 
+echo "######################################################"
+echo "#       generate channelFile and Genesis block       #"
+echo "######################################################"
+# generate channelFile and Genesis block
+pushd scripts
+./createChannelTx.sh
+popd
+
+
 # ######## DOCKER ######## #
 # gather Docker Ids for hyperledger-fabric
 CONTAINER_IDS=$(docker ps -a | awk '($2 ~ /fabric-peer.*/) {print $1}')

@@ -1,5 +1,6 @@
 #!/bin/bash
 CHAINCODE_NAME="mycc"
+CHANNEL_NAME="myc"
 
 echo "############################################################################################"
 echo "#                                   IMPORTED VARIABLES                                     #"

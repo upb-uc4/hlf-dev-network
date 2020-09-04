@@ -4,11 +4,13 @@
 CONFIGFOLDERPATH="./"
 
 # call tool with options
-CHANNELFILE="myc.tx"
+CHANNELFILE="../../myc.tx"
 CHANNELID="myc"
-PROFILE="OrgsChannel"
+PROFILE="SampleSingleMSPChannel"
 
+pushd resources
 ./configtxgen -configPath $CONFIGFOLDERPATH -channelID $CHANNELID -profile $PROFILE -outputCreateChannelTx $CHANNELFILE
+popd
 
 echo "#############################################"
 echo "#              created $CHANNELFILE         #"
@@ -16,10 +18,13 @@ echo "#############################################"
 
 
 # call tool with options to create genesis block
-ORIGINBLOCK="orderer.block"
+ORIGINBLOCK="../../orderer.block"
 CHANNELID="syschanel"
-PROFILE="OrgsOrdererGenesis"
+PROFILE="SampleDevModeSolo"
+
+pushd resources
 ./configtxgen -configPath $CONFIGFOLDERPATH -channelID $CHANNELID -profile $PROFILE -outputBlock $ORIGINBLOCK
+popd
 
 echo "#############################################"
 echo "#              created $ORIGINBLOCK         #"

@@ -30,10 +30,10 @@ Organizations:
 
         # ID is the key by which this org's MSP definition will be referenced.
         # ID can include alphanumeric characters as well as dots and dashes.
-        ID: DEFAULT
+        ID: SampleOrgMSP
 
         # MSPDir is the filesystem path which contains the MSP configuration.
-        MSPDir: msp
+        MSPDir: ../../msp
 
         # Policies defines the set of policies at this level of the config tree
         # For organization policies, their canonical path is usually
@@ -41,23 +41,23 @@ Organizations:
         Policies: &SampleOrgPolicies
             Readers:
                 Type: Signature
-                Rule: "OR('SampleOrg.member')"
+                Rule: "OR('SampleOrgMSP.admin', 'SampleOrgMSP.member', 'SampleOrgMSP.peer', 'SampleOrgMSP.client')"
                 # If your MSP is configured with the new NodeOUs, you might
                 # want to use a more specific rule like the following:
                 # Rule: "OR('SampleOrg.admin', 'SampleOrg.peer', 'SampleOrg.client')"
             Writers:
                 Type: Signature
-                Rule: "OR('SampleOrg.member')"
+                Rule: "OR('SampleOrgMSP.admin', 'SampleOrgMSP.member', 'SampleOrgMSP.peer', 'SampleOrgMSP.client')"
                 # If your MSP is configured with the new NodeOUs, you might
                 # want to use a more specific rule like the following:
                 # Rule: "OR('SampleOrg.admin', 'SampleOrg.client')"
             Admins:
                 Type: Signature
-                Rule: "OR('SampleOrg.member')"
+                Rule: "OR('SampleOrgMSP.admin', 'SampleOrgMSP.member', 'SampleOrgMSP.peer', 'SampleOrgMSP.client')"
             Endorsement:
                 Type: Signature
-                Rule: "OR('SampleOrg.member')"
-
+                Rule: "OR('SampleOrgMSP.admin', 'SampleOrgMSP.member', 'SampleOrgMSP.peer', 'SampleOrgMSP.client')"
+                
         # AnchorPeers defines the location of peers which can be used for
         # cross-org gossip communication. Note, this value is only encoded in
         # the genesis block in the Application section context.
@@ -212,7 +212,7 @@ Application: &ApplicationDefaults
     # Organizations lists the orgs participating on the application side of the
     # network.
     Organizations:
-#      - *SampleOrg
+      - *SampleOrg
 
     # Policies defines the set of policies at this level of the config tree
     # For Application policies, their canonical path is
@@ -229,10 +229,10 @@ Application: &ApplicationDefaults
             Rule: "ANY Readers"
         Writers:
             Type: ImplicitMeta
-            Rule: "ANY Readers"
+            Rule: "ANY Writers"
         Admins:
             Type: ImplicitMeta
-            Rule: "ANY Readers"
+            Rule: "ANY Admins"
 
     # Capabilities describes the application level capabilities, see the
     # dedicated Capabilities section elsewhere in this file for a full
@@ -318,10 +318,10 @@ Orderer: &OrdererDefaults
             Rule: "ANY Readers"
         Writers:
             Type: ImplicitMeta
-            Rule: "ANY Readers"
+            Rule: "ANY Writers"
         Admins:
             Type: ImplicitMeta
-            Rule: "ANY Readers"
+            Rule: "ANY Admins"
         # BlockValidation specifies what signatures must be included in the block
         # from the orderer for the peer to validate it.
         BlockValidation:
@@ -354,11 +354,11 @@ Channel: &ChannelDefaults
         # Who may invoke the 'Broadcast' API
         Writers:
             Type: ImplicitMeta
-            Rule: "ANY Readers"
+            Rule: "ANY Writers"
         # By default, who may modify elements at this config level
         Admins:
             Type: ImplicitMeta
-            Rule: "ANY Readers"
+            Rule: "ANY Admins"
 
 
     # Capabilities describes the channel level capabilities, see the
@@ -385,7 +385,7 @@ Profiles:
     # requires only basic membership for admin privileges. It also defines
     # an Application on the ordering system channel, which should usually
     # be avoided.
-    OrgsOrdererGenesis:
+    SampleDevModeSolo:
         <<: *ChannelDefaults
         Orderer:
             <<: *OrdererDefaults
@@ -393,31 +393,22 @@ Profiles:
                 - <<: *SampleOrg
                   Policies:
                       <<: *SampleOrgPolicies
-                      Admins:
-                          Type: Signature
-                          Rule: "OR('SampleOrg.member')"
         Application:
             <<: *ApplicationDefaults
             Organizations:
                 - <<: *SampleOrg
                   Policies:
                       <<: *SampleOrgPolicies
-                      Admins:
-                          Type: Signature
-                          Rule: "OR('SampleOrg.member')"
         Consortiums:
             SampleConsortium:
                 Organizations:
                     - <<: *SampleOrg
                       Policies:
                           <<: *SampleOrgPolicies
-                          Admins:
-                              Type: Signature
-                              Rule: "OR('SampleOrg.member')"
-    OrgsChannel:
+    SampleSingleMSPChannel:
         <<: *ChannelDefaults
         Consortium: SampleConsortium
         Application:
             <<: *ApplicationDefaults
             Organizations:
-                - *SampleOrg
+                - <<: *SampleOrg
