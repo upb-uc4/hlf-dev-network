@@ -110,7 +110,7 @@ Organizations:
                 Rule: "OR('SampleOrgMSP.admin', 'SampleOrgMSP.member', 'SampleOrgMSP.peer', 'SampleOrgMSP.client')"
                 
     - &Org2
-        # Name is the key by which this org will be referenced in channel
+        # Name is the keSampleOrgMSPy by which this org will be referenced in channel
         # configuration transactions.
         # Name can include alphanumeric characters as well as dots and dashes.
         Name: Org2

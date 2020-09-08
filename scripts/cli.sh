@@ -29,52 +29,80 @@ echo "Continuing..."
 # wait for 'chaincode' to start chaincode
 sleep 10s
 
-#/opt/gopath/src/chaincodedev
+
+
+
+
+
+echo "############################################################################################"
+echo "#                                     PACKAGE CHAINCODE                                    #"
+echo "############################################################################################"
+
+peer lifecycle chaincode package mycc.tar.gz \
+    --path chaincode/build/install/UC4 \
+    --lang java \
+    --label $CHAINCODE_NAME
 
 echo "############################################################################################"
 echo "#                                   INSTALLING CHAINCODE                                   #"
 echo "############################################################################################"
 
 # chaincode points to the chaincode directory in the UC4 repo
-peer chaincode install -p chaincode -n ${CHAINCODE_NAME} -v 0 -l java
+peer lifecycle chaincode install mycc.tar.gz
 
 echo "############################################################################################"
 echo "#                                   CHAINCODE INSTALLED                                    #"
 echo "############################################################################################"
 
+# check installed
+peer lifecycle chaincode queryinstalled
 
 
 
-echo "############################################################################################"
-echo "#                                   APPROVE CHAINCODE                                      #"
-echo "############################################################################################"
+
+
+
+
 
 export CHAINCODE_ID="$(peer lifecycle chaincode queryinstalled | sed -n '1!p' | sed 's/.*Package ID: \(.*\), Label.*/\1/')"
 
+echo "############################################################################################"
+echo "#                           APPROVE CHAINCODE $CHAINCODE_ID                                #"
+echo "############################################################################################"
 
 peer lifecycle chaincode approveformyorg \
-  -o orderer:7050 \
+  --orderer orderer:7050 \
   --channelID "$CHANNEL_NAME" \
   --name "$CHAINCODE_NAME" \
   --version 1.0 \
   --package-id "$CHAINCODE_ID" \
   --sequence 1 \
   --collections-config chaincode/collections_config.json
+  
+echo "############################################################################################"
+echo "#                   2        APPROVE CHAINCODE $CHAINCODE_ID                               #"
+echo "############################################################################################"
+  
+# check approved
+peer lifecycle chaincode checkcommitreadiness \
+  --channelID "$CHANNEL_NAME" \
+  --name "$CHAINCODE_NAME" \
+  --version 1.0 \
+  --sequence 1 \
+  --output json
 
 echo "############################################################################################"
-echo "#                                   COMMIT CHAINCODE                                       #"
+echo "#                            COMMIT CHAINCODE $CHAINCODE_ID                                #"
 echo "############################################################################################"
 
 peer lifecycle chaincode commit \
-    -o orderer:7050 \
+    --orderer orderer:7050 \
     --channelID "$CHANNEL_NAME" \
     --name "$CHAINCODE_NAME" \
     --version 1.0 \
     --sequence 1 \
     --peerAddresses peer:7051 \
     --collections-config chaincode/collections_config.json
-    
-    
 
 echo "############################################################################################"
 echo "#                                CHAINCODE  INSTALLED                                      #"
