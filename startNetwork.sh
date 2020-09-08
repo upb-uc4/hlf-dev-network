@@ -18,10 +18,8 @@ echo "######################################################"
 # clone chaincode with 
 ./installChaincode.sh $BRANCH_TAG
 
-# recreate the channelFile and Genesis Block?
-read -p "Recreate the channelFile and Genesis Block (y/n)? " -n 1 -r
-if [[ $REPLY =~ ^[Yy]$ ]]
-then
+# Overwrite the channelFile and Genesis Block?
+generate_channel_and_genesis () {
   echo "######################################################"
   echo "#       generate channelFile and Genesis block       #"
   echo "######################################################"
@@ -29,7 +27,18 @@ then
   pushd scripts
   ./createChannelTx.sh
   popd
+}
+if [ ! -f ./myc.tx/ ]
+then
+  generate_channel_and_genesis
+else 
+  read -p "Overwrite the channelFile and Genesis Block (y/n)? " -n 1 -r
+  if [[ $REPLY =~ ^[Yy]$ ]]
+	then
+	  generate_channel_and_genesis
+	fi
 fi
+
 
 
 # ######## DOCKER ######## #
