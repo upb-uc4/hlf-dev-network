@@ -49,22 +49,17 @@ echo "##########################################################################
 
 # chaincode points to the chaincode directory in the UC4 repo
 peer lifecycle chaincode install mycc.tar.gz
-
-echo "############################################################################################"
-echo "#                                   CHAINCODE INSTALLED                                    #"
-echo "############################################################################################"
-
-# check installed
-peer lifecycle chaincode queryinstalled
-
-
-
-
-
-
-
-
 export CHAINCODE_ID="$(peer lifecycle chaincode queryinstalled | sed -n '1!p' | sed 's/.*Package ID: \(.*\), Label.*/\1/')"
+
+echo "############################################################################################"
+echo "#                          CHAINCODE INSTALLED $CHAINCODE_ID                               #"
+echo "############################################################################################"
+
+
+
+
+
+
 
 echo "############################################################################################"
 echo "#                           APPROVE CHAINCODE $CHAINCODE_ID                                #"
