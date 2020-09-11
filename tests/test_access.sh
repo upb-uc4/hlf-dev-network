@@ -2,7 +2,7 @@
 
 #apply query at docker peer
 
-RESULT="$(peer lifecycle chaincode queryinstalled | sed -n '1!p' | sed 's/.*Package ID: \(.*\), Label.*/\1/')"
+RESULT="$(docker exec cli peer lifecycle chaincode queryinstalled | sed -n '1!p' | sed 's/.*Package ID: \(.*\), Label.*/\1/')"
 # RESULT=$(docker exec cli peer chaincode list --installed)
 echo "$RESULT"
 if [[ $RESULT =~ "mycc:" ]]; then exit 0; fi
