@@ -9,7 +9,14 @@ echo "#                                   SETTING UP CHANNEL                    
 echo "############################################################################################"
 
 set -e
+# create channel from .tx - file
 peer channel create -c myc -f myc.tx -o orderer:7050
+
+echo "############################################################################################"
+echo "#                                   JOINING    CHANNEL                                     #"
+echo "############################################################################################"
+
+# join channel
 peer channel join -b myc.block
 
 echo "############################################################################################"
@@ -22,29 +29,87 @@ echo "Continuing..."
 # wait for 'chaincode' to start chaincode
 sleep 10s
 
-#/opt/gopath/src/chaincodedev
+
+
+echo "############################################################################################"
+echo "#                                     PACKAGE CHAINCODE                                    #"
+echo "############################################################################################"
+
+peer lifecycle chaincode package mycc.tar.gz \
+    --path chaincode/build/install/UC4 \
+    --lang java \
+    --label $CHAINCODE_NAME
 
 echo "############################################################################################"
 echo "#                                   INSTALLING CHAINCODE                                   #"
 echo "############################################################################################"
 
 # chaincode points to the chaincode directory in the UC4 repo
-peer chaincode install -p chaincode -n ${CHAINCODE_NAME} -v 0 -l java
+peer lifecycle chaincode install mycc.tar.gz
+export CHAINCODE_ID="$(peer lifecycle chaincode queryinstalled | sed -n '1!p' | sed 's/.*Package ID: \(.*\), Label.*/\1/')"
 
 echo "############################################################################################"
-echo "#                                   CHAINCODE INSTALLED                                    #"
+echo "#                          CHAINCODE INSTALLED $CHAINCODE_ID                               #"
 echo "############################################################################################"
 
+# notify 'chaincode' that chaincode is compiled
+echo "$CHAINCODE_ID" | nc chaincode 8080
+
+# wait for 'chaincode' to start chaincode
+sleep 30s
+
+
 echo "############################################################################################"
-echo "#                                   INITIALIZING CHAINCODE                                 #"
+echo "#                           APPROVE CHAINCODE $CHAINCODE_ID                                #"
 echo "############################################################################################"
 
-# TODO: change the function to call the actual init-function
-peer chaincode instantiate -n ${CHAINCODE_NAME} -v 0 -c '{"Args":["initLedger"]}' -C myc
+peer lifecycle chaincode approveformyorg \
+  --orderer orderer:7050 \
+  --channelID "$CHANNEL_NAME" \
+  --name "$CHAINCODE_NAME" \
+  --version 1.0 \
+  --package-id "$CHAINCODE_ID" \
+  --sequence 1 \
+  --collections-config chaincode/collections_config_dev.json
+  
+echo "############################################################################################"
+echo "#                   2        APPROVE CHAINCODE $CHAINCODE_ID                               #"
+echo "############################################################################################"
+  
+# check approved
+peer lifecycle chaincode checkcommitreadiness \
+  --channelID "$CHANNEL_NAME" \
+  --name "$CHAINCODE_NAME" \
+  --version 1.0 \
+  --sequence 1 \
+  --output json \
+  --collections-config chaincode/collections_config_dev.json
 
 echo "############################################################################################"
-echo "#                                   CHAINCODE INITIALIZED                                  #"
-echo "#                                     READY FOR ACTION                                     #"
+echo "#                            COMMIT CHAINCODE $CHAINCODE_ID                                #"
+echo "############################################################################################"
+
+peer lifecycle chaincode commit \
+    --orderer orderer:7050 \
+    --channelID "$CHANNEL_NAME" \
+    --name "$CHAINCODE_NAME" \
+    --version 1.0 \
+    --sequence 1 \
+    --peerAddresses peer:7051 \
+    --collections-config chaincode/collections_config_dev.json
+
+echo "############################################################################################"
+echo "#                               Check COMMITTED CHAINCODE                                  #"
+echo "############################################################################################"
+    
+peer lifecycle chaincode querycommitted \
+  --channelID "$CHANNEL_NAME" \
+  --name "$CHAINCODE_NAME" \
+  --output json
+
+echo "############################################################################################"
+echo "#                                CHAINCODE  INSTALLED                                      #"
+echo "#                                  READY FOR ACTION                                        #"
 echo "############################################################################################"
 
 sleep 600000
