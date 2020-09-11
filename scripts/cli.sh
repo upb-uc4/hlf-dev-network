@@ -72,7 +72,7 @@ peer lifecycle chaincode approveformyorg \
   --version 1.0 \
   --package-id "$CHAINCODE_ID" \
   --sequence 1 \
-  --collections-config chaincode/collections_config.json
+  --collections-config chaincode/collections_config_dev.json
   
 echo "############################################################################################"
 echo "#                   2        APPROVE CHAINCODE $CHAINCODE_ID                               #"
@@ -84,7 +84,8 @@ peer lifecycle chaincode checkcommitreadiness \
   --name "$CHAINCODE_NAME" \
   --version 1.0 \
   --sequence 1 \
-  --output json
+  --output json \
+  --collections-config chaincode/collections_config_dev.json
 
 echo "############################################################################################"
 echo "#                            COMMIT CHAINCODE $CHAINCODE_ID                                #"
@@ -97,7 +98,7 @@ peer lifecycle chaincode commit \
     --version 1.0 \
     --sequence 1 \
     --peerAddresses peer:7051 \
-    --collections-config chaincode/collections_config.json
+    --collections-config chaincode/collections_config_dev.json
 
 echo "############################################################################################"
 echo "#                                CHAINCODE  INSTALLED                                      #"
