@@ -31,9 +31,6 @@ sleep 10s
 
 
 
-
-
-
 echo "############################################################################################"
 echo "#                                     PACKAGE CHAINCODE                                    #"
 echo "############################################################################################"
@@ -55,10 +52,11 @@ echo "##########################################################################
 echo "#                          CHAINCODE INSTALLED $CHAINCODE_ID                               #"
 echo "############################################################################################"
 
+# notify 'chaincode' that chaincode is compiled
+echo "$CHAINCODE_ID" | nc chaincode 8080
 
-
-
-
+# wait for 'chaincode' to start chaincode
+sleep 30s
 
 
 echo "############################################################################################"
@@ -99,6 +97,15 @@ peer lifecycle chaincode commit \
     --sequence 1 \
     --peerAddresses peer:7051 \
     --collections-config chaincode/collections_config_dev.json
+
+echo "############################################################################################"
+echo "#                               Check COMMITTED CHAINCODE                                  #"
+echo "############################################################################################"
+    
+peer lifecycle chaincode querycommitted \
+  --channelID "$CHANNEL_NAME" \
+  --name "$CHAINCODE_NAME" \
+  --output json
 
 echo "############################################################################################"
 echo "#                                CHAINCODE  INSTALLED                                      #"
