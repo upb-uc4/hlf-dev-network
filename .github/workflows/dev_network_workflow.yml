@@ -35,7 +35,7 @@ jobs:
         echo "##########################"
         echo "#  start network script  #"
         echo "##########################"
-        ./startNetwork.sh feature/private_data &
+        ./startNetwork.sh &
         echo "##########################"
         echo "# started network script #"
         echo "##########################"
