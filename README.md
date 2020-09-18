@@ -71,6 +71,7 @@ $ peer chaincode invoke -n mycc -c '{"Args":["transactionName","arg1","arg2","ar
 ```
 
 calls the ```transactionName``` transactioninside the ```mycc``` chaincode on channel ```myc``` with arguments ```arg1```,```arg2```,```arg3```.
+You can also use the ```--transient``` flag to pass data via the transient data field (see example below).
 The chaincode does currently not need to be initialized/installed, as the development-network does that for you.
 
 **WARNING:** If you want to pass json as a string argument to a transaction, you must put a ```\"``` instead of every ```"``` in the inner json, e.g.
@@ -82,7 +83,14 @@ $ peer chaincode invoke -n mycc -c '{"Args":["transactionName","{\"attribute\": 
 Example chaincode invocation:
 
 ```bash
-peer chaincode invoke -n mycc -c '{"Args":["addCourse","{ \"courseId\": \"course1\",\"courseName\": \"courseName1\",\"courseType\": \"Lecture\",\"startDate\": \"2020-06-29\",\"endDate\": \"2020-06-29\",\"ects\": 3,\"lecturerId\": \"lecturer1\",\"maxParticipants\": 100,\"currentParticipants\": 0,\"courseLanguage\": \"English\",\"courseDescription\": \"some lecture\" }"]}' -C myc
+$ peer chaincode invoke -n mycc -c '{"Args":["addCourse","{ \"courseId\": \"course1\",\"courseName\": \"courseName1\",\"courseType\": \"Lecture\",\"startDate\": \"2020-06-29\",\"endDate\": \"2020-06-29\",\"ects\": 3,\"lecturerId\": \"lecturer1\",\"maxParticipants\": 100,\"currentParticipants\": 0,\"courseLanguage\": \"English\",\"courseDescription\": \"some lecture\" }"]}' -C myc
+```
+
+Example chaincode invocation utilizing transient data:
+
+```bash
+$ export VALUE=$(echo -n "{\"matriculationId\":\"0000001\",\"firstName\":\"firstName1\",\"lastName\":\"lastName1\",\"birthDate\":\"1900-07-21\",\"matriculationStatus\":[{\"fieldOfStudy\":\"Computer Science\",\"semesters\":[\"SS2020\"]}]}" | base64 | tr -d \\n)
+$ peer chaincode invoke -n mycc -c '{"Args":["addMatriculationData"]}' --transient "{\"0\":\"$VALUE\"}" -C myc
 ```
 
 
