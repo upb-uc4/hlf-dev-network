@@ -5,6 +5,7 @@
 ## Prerequisites
 * docker-compose
 * docker-IO
+* access to a linux machine
 
 ### Windows Troubleshooting:
 * make sure your OS is up-to-date (e.g. build ~19041 or later; see Windows 10 Update Assistent etc.)
@@ -15,16 +16,16 @@
 
 This seems to fix the issues for under Windows for us. Please let us know if you still run into issues.
 
-## Starting the Network
-To start the development network simply change to the 
+### Generating the channel-description and the genesis-block
+The network will read the genesis block ```./orderer.block``` and the channel description ```./myc.tx``` which have to be generated before starting the network.
+They are determined by the ```./scripts/resources/configtx.yaml```.
+TO create these files you have to execute the script ```./scripts/createChannelTx.sh```, which needs to be done on a linux system since it executes the linux-binary ```./scripts/resources/configtx```.
 
-```
-University-Credits-4.0/product_code/hyperledger/dev_network
-``` 
-and execute
+## Starting the Network
+To start the development network simply clone the repository, execute
 
 ```bash
-$ ./network.sh
+$ ./startNetwork.sh
 ```
 
 and wait for the network to start. Do not wait for the console ouput to stop! Once the network outputs
@@ -44,11 +45,11 @@ $ docker-compose -f docker-compose-simple.yaml up
 ```
 Note that in this case you have to remove the containers manually before restarting the network.
 
-Starting the network starts an orderer (```orderer```), a peer (```peer```), a chaincode container (```chaincode```), a couchdb container (```couchdb```), and a client container (```cli```).
+Starting the network starts an orderer (```orderer```), a peer (```peer```), a chaincode container (```chaincode```), a couchdb container (```couchdb```), and a command-line-interface container (```cli```).
 
 *  ```chaincode``` is the container compiling and running the chaincode for the peer. For that, a ```build.gradle``` is required in the ```chaincode``` java-project.
-* ```couchdb``` this is used internally to store the ledger state. You probably do not have to worry about this.
-* ```cli``` provides fabric binaries that can be utilized to do all sorts of stuff to the network manually (e.g. query chaincode, add channels, etc.)
+* ```couchdb``` is used internally to store the ledger state. You probably do not have to worry about this.
+* ```cli``` provides fabric binaries that can be utilized to do all sorts of stuff to the network manually (e.g. query chaincode, add channels, register/enroll users etc.)
 
 ## Query/Invoke Manually
 
@@ -72,7 +73,7 @@ $ peer chaincode invoke -n mycc -c '{"Args":["transactionName","arg1","arg2","ar
 
 calls the ```transactionName``` transactioninside the ```mycc``` chaincode on channel ```myc``` with arguments ```arg1```,```arg2```,```arg3```.
 You can also use the ```--transient``` flag to pass data via the transient data field (see example below).
-The chaincode does currently not need to be initialized/installed, as the development-network does that for you.
+The chaincode does currently not need to be initialized/installed, as the development-network does that during it's setup (./startNetwork.sh) for you.
 
 **WARNING:** If you want to pass json as a string argument to a transaction, you must put a ```\"``` instead of every ```"``` in the inner json, e.g.
 
@@ -100,7 +101,7 @@ $ peer chaincode invoke -n mycc -c '{"Args":["addMatriculationData"]}' --transie
 The channel name can be adjusted by setting the variable ```CHAINCODE_NAME``` in 
 
 ```
-University-Credits-4.0/product_code/hyperledger/dev_network/scripts/variables.sh
+./scripts/variables.sh
 ```
 
 The channel name can currently not be changed, unless you are familiar with hyperledger's configtx tool etc.
