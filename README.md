@@ -49,7 +49,7 @@ Starting the network starts an orderer (```orderer```), a peer (```peer```), a c
 
 *  ```chaincode``` is the container compiling and running the chaincode for the peer. For that, a ```build.gradle``` is required in the ```chaincode``` java-project.
 * ```couchdb``` is used internally to store the ledger state. You probably do not have to worry about this.
-* ```cli``` provides fabric binaries that can be utilized to do all sorts of stuff to the network manually (e.g. query chaincode, add channels, register/enroll users etc.)
+* ```cli``` provides fabric binaries that can be utilized to do all sorts of stuff to the network manually (e.g. query chaincode, add channels, etc.)
 
 ## Query/Invoke Manually
 
