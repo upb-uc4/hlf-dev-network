@@ -19,7 +19,7 @@ This seems to fix the issues for under Windows for us. Please let us know if you
 ### Generating the channel-description and the genesis-block
 The network will read the genesis block ```./orderer.block``` and the channel description ```./myc.tx``` which have to be generated before starting the network.
 They are determined by the ```./scripts/resources/configtx.yaml```.
-TO create these files you have to execute the script ```./scripts/createChannelTx.sh```, which needs to be done on a linux system since it executes the linux-binary ```./scripts/resources/configtx```.
+To create these files you have to execute the script ```./scripts/createChannelTx.sh```, which needs to be done on a linux system since it executes the linux-binary ```./scripts/resources/configtx```.
 
 ## Starting the Network
 To start the development network simply clone the repository, execute
