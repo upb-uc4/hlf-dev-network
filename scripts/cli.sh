@@ -70,7 +70,7 @@ peer lifecycle chaincode approveformyorg \
   --version 1.0 \
   --package-id "$CHAINCODE_ID" \
   --sequence 1 \
-  --collections-config chaincode/collections_config_dev.json
+  --collections-config UC4-chaincode/collections_config_dev.json
   
 echo "############################################################################################"
 echo "#                   2        APPROVE CHAINCODE $CHAINCODE_ID                               #"
