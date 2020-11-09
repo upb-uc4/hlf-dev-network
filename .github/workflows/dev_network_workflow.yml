@@ -7,10 +7,6 @@ on:
         description: 'Chaincode Target Branch'
         required: true
         default: 'develop'
-      branch:
-        description: 'Dev-Network Branch'
-        required: true
-        default: "develop"
   push:
     branches:
       - '**feature**'
@@ -26,7 +22,6 @@ jobs:
 
   DeployAndTestQueryAccess:
     env:
-      BRANCH: "develop"
       CHAINCODE_TARGET: "develop"
 
     runs-on: ubuntu-latest
@@ -37,18 +32,11 @@ jobs:
     - name: rewrite chaincodeTarget if manual invocation
       if: github.event.inputs.chaincode_target != ''
       run: echo "::set-env name=CHAINCODE_TARGET::${{ github.event.inputs.chaincode_target }}"
-      
-    # Rewrite branch if started manually
-    - name: rewrite branch if manual invocation
-      if: github.event.inputs.branch != ''
-      run: echo "::set-env name=BRANCH::${{ github.event.inputs.branch }}"
     # ################### ENV VARS ############################################################ #
 
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
     - name: check out source repository
       uses: actions/checkout@v2
-      with:
-        ref: '$BRANCH'
     
     # Set up JDK
     - name: Set up JDK 1.8
