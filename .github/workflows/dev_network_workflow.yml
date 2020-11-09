@@ -35,13 +35,13 @@ jobs:
         echo "##########################"
         echo "#  start network script  #"
         echo "##########################"
-        ./startNetwork.sh &
+        ./startNetwork.sh "feature/publish_to_maven" &
         echo "##########################"
         echo "# started network script #"
         echo "##########################"
         echo "#    begin sleep         #"
         echo "##########################"
-        sleep 180
+        sleep 270
         echo "#    finish sleep        #"
         echo "##########################"
     
