@@ -1,10 +1,17 @@
-/hyperledger_chaincode/
-/chaincode/
-/hlf-chaincode/
+# downloaded during run
+/hlf-chaincode/ 
+
+#generated
 myc.block
 myc.tx
 mycc.tar.gz
 orderer.block
+
+# visual studio
 .vs
+
+#intellij
 .idea
+
+#gradle temp files
 .gradle
