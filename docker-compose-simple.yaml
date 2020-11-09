@@ -74,7 +74,7 @@ services:
     volumes:
         - /var/run/:/host/var/run/
         - ./msp:/etc/hyperledger/msp
-        - ./hlf-chaincode/chaincode:/opt/gopath/src/chaincodedev/chaincode
+        - ./hlf-chaincode/UC4-chaincode:/opt/gopath/src/chaincodedev/UC4-chaincode
         - ./:/opt/gopath/src/chaincodedev/
     depends_on:
       - orderer

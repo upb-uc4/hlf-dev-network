@@ -6,7 +6,7 @@ echo "Start sleep"
 sleep 15s
 echo "Finish sleep"
 
-pushd /opt/gopath/src/hlf-chaincode/chaincode
+pushd /opt/gopath/src/hlf-chaincode/UC4-chaincode
 
 echo "############################################################################################"
 echo "#                                   COMPILING CHAINCODE                                    #"
