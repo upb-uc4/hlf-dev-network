@@ -6,13 +6,13 @@ echo "Start sleep"
 sleep 15s
 echo "Finish sleep"
 
-pushd /opt/gopath/src/chaincode
+pushd /opt/gopath/src/hlf-chaincode/chaincode
 
 echo "############################################################################################"
 echo "#                                   COMPILING CHAINCODE                                    #"
 echo "############################################################################################"
 
-/opt/gopath/src/gradlew installDist
+./gradlew installDist
 #./gradlew installDist
 
 echo "############################################################################################"
@@ -36,6 +36,6 @@ echo "#                                   STARTING CHAINCODE                    
 echo "############################################################################################"
 
 export CORE_PEER_TLS_ENABLED=false 
-/opt/gopath/src/gradlew run
+./gradlew run
 
 popd
