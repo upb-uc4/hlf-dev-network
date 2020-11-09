@@ -22,7 +22,7 @@ jobs:
 
   DeployAndTestQueryAccess:
     env:
-      CHAINCODE_TARGET: "develop"
+      CHAINCODE_TARGET: "feature/publish_to_maven"
 
     runs-on: ubuntu-latest
 
