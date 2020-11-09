@@ -70,7 +70,7 @@ peer lifecycle chaincode approveformyorg \
   --version 1.0 \
   --package-id "$CHAINCODE_ID" \
   --sequence 1 \
-  --collections-config UC4-chaincode/collections_config_dev.json
+  --collections-config UC4-chaincode/assets/collections_config_dev.json
   
 echo "############################################################################################"
 echo "#                   2        APPROVE CHAINCODE $CHAINCODE_ID                               #"
@@ -83,7 +83,7 @@ peer lifecycle chaincode checkcommitreadiness \
   --version 1.0 \
   --sequence 1 \
   --output json \
-  --collections-config UC4-chaincode/collections_config_dev.json
+  --collections-config UC4-chaincode/assets/collections_config_dev.json
 
 echo "############################################################################################"
 echo "#                            COMMIT CHAINCODE $CHAINCODE_ID                                #"
@@ -96,7 +96,7 @@ peer lifecycle chaincode commit \
     --version 1.0 \
     --sequence 1 \
     --peerAddresses peer:7051 \
-    --collections-config UC4-chaincode/collections_config_dev.json
+    --collections-config UC4-chaincode/assets/collections_config_dev.json
 
 echo "############################################################################################"
 echo "#                               Check COMMITTED CHAINCODE                                  #"
