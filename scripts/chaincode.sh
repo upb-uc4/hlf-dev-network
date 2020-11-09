@@ -36,6 +36,6 @@ echo "#                                   STARTING CHAINCODE                    
 echo "############################################################################################"
 
 export CORE_PEER_TLS_ENABLED=false 
-/opt/gopath/src/gradlew run
+./gradlew run
 
 popd
