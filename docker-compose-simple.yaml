@@ -83,7 +83,7 @@ services:
 
   chaincode:
     container_name: chaincode
-    image: uc4official/chaincode_gradlew
+    image: hyperledger/fabric-javaenv:2.1.1
     tty: true
     environment:
       - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
@@ -97,7 +97,7 @@ services:
     volumes:
         - /var/run/:/host/var/run/
         - ./msp:/etc/hyperledger/msp
-        - ./hlf-chaincode/chaincode:/opt/gopath/src/chaincode
+        - ./hlf-chaincode:/opt/gopath/src/hlf-chaincode
         - ./scripts:/opt/gopath/src/scripts
     depends_on:
       - orderer
