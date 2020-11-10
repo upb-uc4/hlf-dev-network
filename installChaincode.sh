@@ -15,12 +15,13 @@ echo "######################################################"
 echo "Download chaincode with version: $CHAINCODE_VERSION"
 echo "######################################################"
 
-
 # dowload chaincode
 mkdir -p chaincode/assets
 mkdir -p chaincode/UC4-chaincode
 wget -c https://github.com/upb-uc4/hlf-chaincode/releases/download/"$CHAINCODE_VERSION"/UC4-chaincode.tar.gz -O - | tar -xz -C "./chaincode/UC4-chaincode"
-msg "Download assets"
+echo "######################################################"
+echo "Download assets"
+echo "######################################################"
 wget -c https://github.com/upb-uc4/hlf-chaincode/releases/download/"$CHAINCODE_VERSION"/collections_config_dev.json -O "./chaincode/assets/collections_config_dev.json"
 
 echo "#############################################"
