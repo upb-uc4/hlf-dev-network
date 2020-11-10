@@ -6,7 +6,8 @@ services:
     container_name: orderer
     image: hyperledger/fabric-orderer:2.1.1
     environment:
-      - ORDERER_GENERAL_LISTENADDRESS=orderer
+      - ORDERER_GENERAL_LISTENADDRESS=0.0.0.0
+      - ORDERER_GENERAL_LISTENPORT=7050
       - ORDERER_GENERAL_BOOTSTRAPMETHOD=file
       - ORDERER_GENERAL_BOOTSTRAPFILE=orderer.block
       - ORDERER_GENERAL_LOCALMSPID=SampleOrgMSP
@@ -36,7 +37,10 @@ services:
     environment: # maybe add tls with "CORE_PEER_TLS_ENABLED=true"
       - CORE_PEER_ID=peer
       - CORE_PEER_ADDRESS=peer:7051
-      - CORE_PEER_LISTENADDRESS=peer:7051 # added
+      - CORE_PEER_LISTENADDRESS=0.0.0.0:7051
+      - CORE_PEER_CHAINCODEADDRESS=peer:7052
+      - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:7052
+      - CORE_PEER_GOSSIP_BOOTSTRAP=peer:7051
       - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer:7051
       - CORE_PEER_LOCALMSPID=SampleOrgMSP
       - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
@@ -52,7 +56,6 @@ services:
     command: peer node start
     ports:
       - 7051:7051
-      - 7053:7053
     depends_on:
       - orderer
       - couchdb
