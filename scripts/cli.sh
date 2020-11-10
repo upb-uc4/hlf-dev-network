@@ -5,52 +5,36 @@ sleep 10s
 source /opt/gopath/src/chaincodedev/scripts/variables.sh
 
 echo "############################################################################################"
-echo "#                                   SETTING UP CHANNEL                                     #"
+echo "SET UP CHANNEL"
 echo "############################################################################################"
-
 set -e
 # create channel from .tx - file
 peer channel create -c myc -f myc.tx -o orderer:7050
 
 echo "############################################################################################"
-echo "#                                   JOINING    CHANNEL                                     #"
+echo "JOIN CHANNEL"
 echo "############################################################################################"
-
 # join channel
 peer channel join -b myc.block
 
 echo "############################################################################################"
-echo "#                                   CHANNEL SETUP DONE                                     #"
+echo "PACKAGE CHAINCODE"
 echo "############################################################################################"
-
-echo "############################################################################################"
-echo "#                                     PACKAGE CHAINCODE                                    #"
-echo "############################################################################################"
-
 peer lifecycle chaincode package mycc.tar.gz \
     --path UC4-chaincode \
     --lang java \
     --label $CHAINCODE_NAME
 
 echo "############################################################################################"
-echo "#                                   INSTALLING CHAINCODE                                   #"
+echo "INSTALL CHAINCODE"
 echo "############################################################################################"
-
 # chaincode points to the chaincode directory in the UC4 repo
 peer lifecycle chaincode install mycc.tar.gz
 export CHAINCODE_ID="$(peer lifecycle chaincode queryinstalled | sed -n '1!p' | sed 's/.*Package ID: \(.*\), Label.*/\1/')"
 
 echo "############################################################################################"
-echo "#                          CHAINCODE INSTALLED $CHAINCODE_ID                               #"
+echo "APPROVE CHAINCODE $CHAINCODE_ID"
 echo "############################################################################################"
-
-# wait for 'chaincode' to start chaincode
-sleep 30s
-
-echo "############################################################################################"
-echo "#                           APPROVE CHAINCODE $CHAINCODE_ID                                #"
-echo "############################################################################################"
-
 peer lifecycle chaincode approveformyorg \
   --orderer orderer:7050 \
   --channelID "$CHANNEL_NAME" \
@@ -61,9 +45,8 @@ peer lifecycle chaincode approveformyorg \
   --collections-config chaincode/assets/collections_config_dev.json
   
 echo "############################################################################################"
-echo "#                   2        APPROVE CHAINCODE $CHAINCODE_ID                               #"
+echo "CHECK COMMIT READINESS CHAINCODE $CHAINCODE_ID"
 echo "############################################################################################"
-  
 # check approved
 peer lifecycle chaincode checkcommitreadiness \
   --channelID "$CHANNEL_NAME" \
@@ -74,9 +57,8 @@ peer lifecycle chaincode checkcommitreadiness \
   --collections-config chaincode/assets/collections_config_dev.json
 
 echo "############################################################################################"
-echo "#                            COMMIT CHAINCODE $CHAINCODE_ID                                #"
+echo "COMMIT CHAINCODE $CHAINCODE_ID"
 echo "############################################################################################"
-
 peer lifecycle chaincode commit \
     --orderer orderer:7050 \
     --channelID "$CHANNEL_NAME" \
@@ -87,7 +69,7 @@ peer lifecycle chaincode commit \
     --collections-config chaincode/assets/collections_config_dev.json
 
 echo "############################################################################################"
-echo "#                               Check COMMITTED CHAINCODE                                  #"
+echo "QUERY COMMITTED CHAINCODE"
 echo "############################################################################################"
     
 peer lifecycle chaincode querycommitted \
