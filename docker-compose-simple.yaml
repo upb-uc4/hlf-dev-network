@@ -79,4 +79,3 @@ services:
     depends_on:
       - orderer
       - peer
-      - chaincode
