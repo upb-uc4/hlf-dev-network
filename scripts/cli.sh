@@ -23,20 +23,12 @@ echo "##########################################################################
 echo "#                                   CHANNEL SETUP DONE                                     #"
 echo "############################################################################################"
 
-# wait for 'chaincode' to compile chaincode
-echo "" | nc -l -p 8080
-echo "Continuing..."
-# wait for 'chaincode' to start chaincode
-sleep 10s
-
-
-
 echo "############################################################################################"
 echo "#                                     PACKAGE CHAINCODE                                    #"
 echo "############################################################################################"
 
 peer lifecycle chaincode package mycc.tar.gz \
-    --path UC4-chaincode/build/install/UC4-chaincode \
+    --path UC4-chaincode \
     --lang java \
     --label $CHAINCODE_NAME
 
@@ -70,7 +62,7 @@ peer lifecycle chaincode approveformyorg \
   --version 1.0 \
   --package-id "$CHAINCODE_ID" \
   --sequence 1 \
-  --collections-config UC4-chaincode/assets/collections_config_dev.json
+  --collections-config chaincode/assets/collections_config_dev.json
   
 echo "############################################################################################"
 echo "#                   2        APPROVE CHAINCODE $CHAINCODE_ID                               #"
@@ -83,7 +75,7 @@ peer lifecycle chaincode checkcommitreadiness \
   --version 1.0 \
   --sequence 1 \
   --output json \
-  --collections-config UC4-chaincode/assets/collections_config_dev.json
+  --collections-config chaincode/assets/collections_config_dev.json
 
 echo "############################################################################################"
 echo "#                            COMMIT CHAINCODE $CHAINCODE_ID                                #"
@@ -96,7 +88,7 @@ peer lifecycle chaincode commit \
     --version 1.0 \
     --sequence 1 \
     --peerAddresses peer:7051 \
-    --collections-config UC4-chaincode/assets/collections_config_dev.json
+    --collections-config chaincode/assets/collections_config_dev.json
 
 echo "############################################################################################"
 echo "#                               Check COMMITTED CHAINCODE                                  #"

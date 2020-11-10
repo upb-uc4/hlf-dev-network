@@ -6,21 +6,7 @@ echo "Start sleep"
 sleep 15s
 echo "Finish sleep"
 
-pushd /opt/gopath/src/hlf-chaincode/UC4-chaincode
-
-echo "############################################################################################"
-echo "#                                   COMPILING CHAINCODE                                    #"
-echo "############################################################################################"
-
-./gradlew installDist
-#./gradlew installDist
-
-echo "############################################################################################"
-echo "#                                   CHAINCODE COMPILED                                     #"
-echo "############################################################################################"
-
-# notify 'cli' that chaincode is compiled
-echo "Continued cli..." | nc cli 8080
+pushd /opt/gopath/src/chaincode
 
 # wait for 'cli' to commit chaincode
 echo "" | nc -l -p 8080 > tmp.txt
