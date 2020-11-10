@@ -44,12 +44,8 @@ echo "##########################################################################
 echo "#                          CHAINCODE INSTALLED $CHAINCODE_ID                               #"
 echo "############################################################################################"
 
-# notify 'chaincode' that chaincode is compiled
-echo "$CHAINCODE_ID" | nc chaincode 8080
-
 # wait for 'chaincode' to start chaincode
 sleep 30s
-
 
 echo "############################################################################################"
 echo "#                           APPROVE CHAINCODE $CHAINCODE_ID                                #"
