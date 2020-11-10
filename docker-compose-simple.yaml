@@ -1,10 +1,10 @@
-version: '2'
+version: '3'
 
 services:
 
   orderer:
     container_name: orderer
-    image: hyperledger/fabric-orderer:2.1.1
+    image: hyperledger/fabric-orderer:2.2
     environment:
       - ORDERER_GENERAL_LISTENADDRESS=0.0.0.0
       - ORDERER_GENERAL_LISTENPORT=7050
@@ -33,7 +33,7 @@ services:
   
   peer:
     container_name: peer
-    image: hyperledger/fabric-peer:2.1.1
+    image: hyperledger/fabric-peer:2.2
     environment: # maybe add tls with "CORE_PEER_TLS_ENABLED=true"
       - CORE_PEER_ID=peer
       - CORE_PEER_ADDRESS=peer:7051
@@ -62,7 +62,7 @@ services:
 
   cli:
     container_name: cli
-    image: hyperledger/fabric-tools:2.1.1
+    image: hyperledger/fabric-tools:2.2
     tty: true
     environment:
       - GOPATH=/opt/gopath
