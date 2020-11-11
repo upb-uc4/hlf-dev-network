@@ -22,7 +22,7 @@ jobs:
 
   DeployAndTestQueryAccess:
     env:
-      CHAINCODE_TARGET: "v0.12.2"
+      CHAINCODE_TARGET: ""
 
     runs-on: ubuntu-latest
 
