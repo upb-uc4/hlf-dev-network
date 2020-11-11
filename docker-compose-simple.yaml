@@ -6,6 +6,7 @@ services:
     container_name: orderer
     image: hyperledger/fabric-orderer:2.2
     environment:
+      - FABRIC_LOGGING_SPEC=WARNING # log less
       - ORDERER_GENERAL_LISTENADDRESS=0.0.0.0
       - ORDERER_GENERAL_LISTENPORT=7050
       - ORDERER_GENERAL_BOOTSTRAPMETHOD=file
@@ -35,7 +36,11 @@ services:
     container_name: peer
     image: hyperledger/fabric-peer:2.2
     environment: # maybe add tls with "CORE_PEER_TLS_ENABLED=true"
-      - FABRIC_LOGGING_SPEC=DEBUG # log more
+      - FABRIC_LOGGING_SPEC=INFO # log less
+      # the following setting starts chaincode containers on the same
+      # bridge network as the peers
+      # https://docs.docker.com/compose/networking/
+      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=${COMPOSE_PROJECT_NAME}_test
       - CORE_PEER_ID=peer
       - CORE_PEER_ADDRESS=peer:7051
       - CORE_PEER_LISTENADDRESS=0.0.0.0:7051
