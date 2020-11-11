@@ -56,7 +56,7 @@ jobs:
         echo "##########################"
         echo "#    begin sleep         #"
         echo "##########################"
-        sleep 270
+        sleep 100
         echo "#    finish sleep        #"
         echo "##########################"
     
