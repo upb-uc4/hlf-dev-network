@@ -35,6 +35,7 @@ services:
     container_name: peer
     image: hyperledger/fabric-peer:2.2
     environment: # maybe add tls with "CORE_PEER_TLS_ENABLED=true"
+      - FABRIC_LOGGING_SPEC=DEBUG # log more
       - CORE_PEER_ID=peer
       - CORE_PEER_ADDRESS=peer:7051
       - CORE_PEER_LISTENADDRESS=0.0.0.0:7051
