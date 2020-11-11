@@ -1,12 +1,11 @@
 #!/bin/bash
 
+export CHAINCODE_VERSION=""
 # read parameter
 if [ -z "$1" ]
 then
-  # CHAINCODE_VERSION default version = 0.12.2
-  echo "Installing chaincode from release v0.12.2"
+  echo "Installing chaincode from latest release"
   echo "Call script with parameter [version] to specify a different branch or tag."
-  export CHAINCODE_VERSION="v0.12.2"
 else
   # CHAINCODE_VERSION read from parameter
   export CHAINCODE_VERSION=$1
