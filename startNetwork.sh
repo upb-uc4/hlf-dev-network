@@ -1,27 +1,26 @@
 #!/bin/bash
 
+export CHAINCODE_VERSION=""
 # read parameter
 if [ -z "$1" ]
 then
-  # BRANCH_TAG default branch = develop
-  echo "Installing latest chaincode from develop."
-  echo "Call script with parameter [branch|tag] to specify a different branch or tag."
-  export BRANCH_TAG=develop
+  echo "Installing chaincode from latest release"
+  echo "Call script with parameter [version] to specify a different branch or tag."
 else
-  # BRANCH_TAG read from parameter
-  export BRANCH_TAG=$1
+  # CHAINCODE_VERSION read from parameter
+  export CHAINCODE_VERSION=$1
 fi
 echo "######################################################"
-echo "#   Clone chaincode with branch / tag: $BRANCH_TAG   #"
+echo "Clone chaincode with version: $CHAINCODE_VERSION"
 echo "######################################################"
 
-# clone chaincode with 
-./installChaincode.sh $BRANCH_TAG
+# clone chaincode
+./installChaincode.sh $CHAINCODE_VERSION
 
 # Overwrite the channelFile and Genesis Block?
 generate_channel_and_genesis () {
   echo "######################################################"
-  echo "#       generate channelFile and Genesis block       #"
+  echo "generate channelFile and Genesis block"
   echo "######################################################"
   # generate channelFile and Genesis block
   pushd scripts

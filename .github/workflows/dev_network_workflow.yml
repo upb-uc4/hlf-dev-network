@@ -1,6 +1,12 @@
 name: Hyperledger Dev Network Test Pipeline
 
 on:
+  workflow_dispatch:
+    inputs:
+      chaincode_target:
+        description: 'Chaincode Target Branch'
+        required: true
+        default: 'v0.12.2'
   push:
     branches:
       - '**feature**'
@@ -15,10 +21,19 @@ on:
 jobs:
 
   DeployAndTestQueryAccess:
+    env:
+      CHAINCODE_TARGET: ""
 
     runs-on: ubuntu-latest
 
     steps:
+    # ################### ENV VARS ############################################################ #
+    # Rewrite chaincodeTarget if started manually
+    - name: rewrite chaincodeTarget if manual invocation
+      if: github.event.inputs.chaincode_target != ''
+      run: echo "::set-env name=CHAINCODE_TARGET::${{ github.event.inputs.chaincode_target }}"
+    # ################### ENV VARS ############################################################ #
+
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
     - name: check out source repository
       uses: actions/checkout@v2
@@ -35,13 +50,13 @@ jobs:
         echo "##########################"
         echo "#  start network script  #"
         echo "##########################"
-        ./startNetwork.sh &
+        ./startNetwork.sh "$CHAINCODE_TARGET" &
         echo "##########################"
         echo "# started network script #"
         echo "##########################"
         echo "#    begin sleep         #"
         echo "##########################"
-        sleep 180
+        sleep 100
         echo "#    finish sleep        #"
         echo "##########################"
     

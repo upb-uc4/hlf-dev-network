@@ -5,36 +5,25 @@ if [ -z "$1" ]
 then
   # BRANCH_TAG default branch = develop
   echo "Installing latest chaincode from develop."
-  echo "Use './installChaincode.sh [branch|tag]' to specify another branch or tag."
-  export BRANCH_TAG=develop
+  echo "Use './installChaincode.sh [release]' to specify another version (e.g. v0.12.2) ."
+  export CHAINCODE_VERSION_PATH="latest/download"
 else
   # BRANCH_TAG read from parameter
-  export BRANCH_TAG=$1
+  export CHAINCODE_VERSION_PATH="download/$1"
 fi
 echo "######################################################"
-echo "#   Clone chaincode with branch / tag: $BRANCH_TAG   #"
+echo "Download chaincode from: $CHAINCODE_VERSION_PATH"
 echo "######################################################"
 
-
-# clone chaincode
-if [ ! -d ./hlf-chaincode/ ]
-then
-	git clone https://github.com/upb-uc4/hlf-chaincode.git
-	pushd ./hlf-chaincode
-	git checkout $BRANCH_TAG
-	git pull
-	popd
-else
-	read -p "Overwrite existing chaincode (y/n)? " -n 1 -r
-	if [[ $REPLY =~ ^[Yy]$ ]]
-	then
-		pushd ./hlf-chaincode
-		git checkout $BRANCH_TAG
-		git pull
-		popd
-	fi
-fi
+# dowload chaincode
+mkdir -p chaincode/assets
+mkdir -p chaincode/UC4-chaincode
+wget -q -c https://github.com/upb-uc4/hlf-chaincode/releases/"$CHAINCODE_VERSION_PATH"/UC4-chaincode.tar.gz -O - | tar -xz -C "./chaincode/UC4-chaincode"
+echo "######################################################"
+echo "Download assets"
+echo "######################################################"
+wget -q -c https://github.com/upb-uc4/hlf-chaincode/releases/"$CHAINCODE_VERSION_PATH"/collections_config_dev.json -O "./chaincode/assets/collections_config_dev.json"
 
 echo "#############################################"
-echo "#             chaincode ready               #"
+echo "chaincode ready"
 echo "#############################################"

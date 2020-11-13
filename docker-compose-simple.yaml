@@ -1,12 +1,14 @@
-version: '2'
+version: '3'
 
 services:
 
   orderer:
     container_name: orderer
-    image: hyperledger/fabric-orderer:2.1.1
+    image: hyperledger/fabric-orderer:2.2
     environment:
-      - ORDERER_GENERAL_LISTENADDRESS=orderer
+      - FABRIC_LOGGING_SPEC=WARNING # log less
+      - ORDERER_GENERAL_LISTENADDRESS=0.0.0.0
+      - ORDERER_GENERAL_LISTENPORT=7050
       - ORDERER_GENERAL_BOOTSTRAPMETHOD=file
       - ORDERER_GENERAL_BOOTSTRAPFILE=orderer.block
       - ORDERER_GENERAL_LOCALMSPID=SampleOrgMSP
@@ -32,15 +34,18 @@ services:
   
   peer:
     container_name: peer
-    image: hyperledger/fabric-peer:2.1.1
+    image: hyperledger/fabric-peer:2.2
     environment: # maybe add tls with "CORE_PEER_TLS_ENABLED=true"
+      - FABRIC_LOGGING_SPEC=WARNING # log less
+      - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
       - CORE_PEER_ID=peer
       - CORE_PEER_ADDRESS=peer:7051
-      - CORE_PEER_LISTENADDRESS=peer:7051 # added
-      - CORE_PEER_CHAINCODELISTENADDRESS=peer:7052 # added
+      - CORE_PEER_LISTENADDRESS=0.0.0.0:7051
+      - CORE_PEER_CHAINCODEADDRESS=localhost:7052
+      - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:7052
+      - CORE_PEER_GOSSIP_BOOTSTRAP=peer:7051
       - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer:7051
       - CORE_PEER_LOCALMSPID=SampleOrgMSP
-      - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
       - CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/msp
       - CORE_LEDGER_STATE_STATEDATABASE=CouchDB
       - CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=couchdb:5984
@@ -50,17 +55,17 @@ services:
         - /var/run/:/host/var/run/
         - ./msp:/etc/hyperledger/msp
     working_dir: /opt/gopath/src/github.com/hyperledger/fabric/peer
-    command: peer node start --peer-chaincodedev=true
+    command: peer node start
     ports:
       - 7051:7051
-      - 7053:7053
+      - 7052:7052
     depends_on:
       - orderer
       - couchdb
 
   cli:
     container_name: cli
-    image: hyperledger/fabric-tools:2.1.1
+    image: hyperledger/fabric-tools:2.2
     tty: true
     environment:
       - GOPATH=/opt/gopath
@@ -74,31 +79,8 @@ services:
     volumes:
         - /var/run/:/host/var/run/
         - ./msp:/etc/hyperledger/msp
-        - ./hlf-chaincode/chaincode:/opt/gopath/src/chaincodedev/chaincode
+        - ./chaincode/UC4-chaincode:/opt/gopath/src/chaincodedev/UC4-chaincode
         - ./:/opt/gopath/src/chaincodedev/
-    depends_on:
-      - orderer
-      - peer
-      - chaincode
-
-  chaincode:
-    container_name: chaincode
-    image: hyperledger/fabric-javaenv:2.1.1
-    tty: true
-    environment:
-      - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
-      # - FABRIC_LOGGING_SPEC=DEBUG
-      - CORE_PEER_ID=abstore
-      - CORE_PEER_ADDRESS=peer:7052
-      - CORE_PEER_LOCALMSPID=SampleOrgMSP
-      - CORE_PEER_MSPCONFIGPATH=/etc/hyperledger/msp
-    working_dir: /opt/gopath/src/chaincode
-    command: /bin/bash -c '/opt/gopath/src/scripts/chaincode.sh'
-    volumes:
-        - /var/run/:/host/var/run/
-        - ./msp:/etc/hyperledger/msp
-        - ./hlf-chaincode:/opt/gopath/src/hlf-chaincode
-        - ./scripts:/opt/gopath/src/scripts
     depends_on:
       - orderer
       - peer
