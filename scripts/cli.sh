@@ -22,7 +22,7 @@ echo "##########################################################################
 echo "READ CHAINCODE VERSION"
 echo "############################################################################################"
 jarPath=UC4-chaincode/UC4-chaincode/UC4-chaincode*.jar
-unzip -q -c $jarPath META-INF/MANIFEST.MF | grep 'Implementation-Version' | cut -d ':' -f2 | tr -d ' ' | tr -d '\r' | tr -d '\n'>testversion.txt
+unzip -q $jarPath META-INF/MANIFEST.MF | grep 'Implementation-Version' | cut -d ':' -f2 | tr -d ' ' | tr -d '\r' | tr -d '\n'>testversion.txt
 # add access rights to file for everyone
 chmod 777 testversion.txt
 export CHAINCODE_VERSION=$(cat testversion.txt)
