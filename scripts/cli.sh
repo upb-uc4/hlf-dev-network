@@ -17,6 +17,18 @@ echo "##########################################################################
 # join channel
 peer channel join -b myc.block
 
+
+echo "############################################################################################"
+echo "READ CHAINCODE VERSION"
+echo "############################################################################################"
+jarPath=UC4-chaincode/UC4-chaincode/UC4-chaincode*.jar
+unzip -q -c $jarPath META-INF/MANIFEST.MF | grep 'Implementation-Version' | cut -d ':' -f2 | tr -d ' ' | tr -d '\r' | tr -d '\n'>testversion.txt
+# add access rights to file for everyone
+chmod 777 testversion.txt
+export CHAINCODE_VERSION=$(cat testversion.txt)
+echo "CHAINCODE VERSION:: $CHAINCODE_VERSION"
+
+
 echo "############################################################################################"
 echo "PACKAGE CHAINCODE"
 echo "############################################################################################"
@@ -39,7 +51,7 @@ peer lifecycle chaincode approveformyorg \
   --orderer orderer:7050 \
   --channelID "$CHANNEL_NAME" \
   --name "$CHAINCODE_NAME" \
-  --version 1.0 \
+  --version $CHAINCODE_VERSION \
   --package-id "$CHAINCODE_ID" \
   --sequence 1 \
   --collections-config chaincode/assets/collections_config_dev.json
@@ -51,7 +63,7 @@ echo "##########################################################################
 peer lifecycle chaincode checkcommitreadiness \
   --channelID "$CHANNEL_NAME" \
   --name "$CHAINCODE_NAME" \
-  --version 1.0 \
+  --version $CHAINCODE_VERSION \
   --sequence 1 \
   --output json \
   --collections-config chaincode/assets/collections_config_dev.json
@@ -63,7 +75,7 @@ peer lifecycle chaincode commit \
     --orderer orderer:7050 \
     --channelID "$CHANNEL_NAME" \
     --name "$CHAINCODE_NAME" \
-    --version 1.0 \
+    --version $CHAINCODE_VERSION \
     --sequence 1 \
     --peerAddresses peer:7051 \
     --collections-config chaincode/assets/collections_config_dev.json
