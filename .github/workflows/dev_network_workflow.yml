@@ -6,7 +6,7 @@ on:
       chaincode_target:
         description: 'Chaincode Target Branch'
         required: true
-        default: 'v0.12.2'
+        default: 'v0.12.3'
   push:
     branches:
       - '**feature**'
